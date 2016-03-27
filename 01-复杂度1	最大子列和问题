@@ -1,0 +1,26 @@
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+///1320
+int main()
+{
+
+    int i,t,n,sum,m;
+    sum=m=0;
+    scanf("%d",&n);
+    for (i=0; i<n; i++)
+    {
+        scanf("%d",&t);
+        sum+=t;
+        if (sum<0)
+        {
+            sum=0;
+        }
+        else if (sum>m)
+        {
+            m=sum;
+        }
+    }
+    printf("%d\n",m);
+    return 0;
+}
