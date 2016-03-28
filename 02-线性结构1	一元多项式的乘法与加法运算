@@ -1,0 +1,115 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#define N 1000
+using namespace std;
+///1307
+typedef struct node
+{
+    int xi;
+    int eop;
+    struct node * next;
+} Node;
+int main()
+{
+    int i,numA,numB;
+    Node *a=NULL,*b=NULL,*sum=NULL,*mul=NULL;
+    Node *pt=NULL,*pr=NULL;
+    Node *pa=NULL,*pb=NULL;
+    scanf("%d",&numA);
+    for (i=0; i<numA; i++)
+    {
+        pt = (Node *)malloc(sizeof(Node));
+        pt->next=NULL;
+        scanf("%d %d",&pt->xi,&pt->eop);
+        if (a==NULL)
+        {
+            a=pt;
+            pr=pt;
+        }
+        else
+        {
+            pr->next=pt;
+            pr=pt;
+        }
+    }
+    scanf("%d",&numB);
+    for (i=0; i<numB; i++)
+    {
+        pt = (Node *)malloc(sizeof(Node));
+        pt->next=NULL;
+        scanf("%d %d",&pt->xi,&pt->eop);
+        if (b==NULL)
+        {
+            b=pt;
+            pr=pt;
+        }
+        else
+        {
+            pr->next=pt;
+            pr=pt;
+        }
+    }
+    pt=a;
+
+    for (pa=a,pb=b; pa!=NULL&&pb!=NULL;)
+    {
+        pt = (Node *)malloc(sizeof(Node));
+        pt->next =NULL;
+        if (pa->eop > pb->eop)
+        {
+
+            pt->eop =pa->eop;
+            pt->xi  =pa->xi;
+            pa      =pa->next;
+
+        }
+        else if (pa->eop > pb->eop)
+        {
+            pt->eop =pb->eop;
+            pt->xi  =pb->xi;
+            pb      =pb->next;
+        }
+        else
+        {
+            pt->eop =pa->eop;
+            pt->xi  =pa->xi+pb->xi;
+        }
+        if (sum==NULL)
+        {
+            sum=pt;
+            pr=pt;
+        }
+        else
+
+        {
+            pr=pr->next=pt;
+        }
+    }
+    if (pa!=NULL)
+    {
+        pr->next=pa;
+    }
+    else
+    {
+        pr->next=pb;
+    }
+
+for (pt=a;pt!=NULL;pt=pt->next)
+{
+    printf("%d %d",pt->xi,pt->eop);
+    if (pt->next==NULL)
+    {
+        printf("\n");
+    }
+    else
+    {
+        printf(" ");
+    }
+}
+
+
+
+    cout << "Hello world!" << endl;
+    return 0;
+}
