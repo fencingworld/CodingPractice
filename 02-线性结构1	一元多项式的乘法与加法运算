@@ -10,18 +10,48 @@ typedef struct node
     int eop;
     struct node * next;
 } Node;
+void display(Node *p)
+{
+    Node *pt=NULL,*pr=NULL,*ps=NULL;
+    if (p->next==NULL)
+    {
+        printf("0 0\n");
+    }
+    else
+    {
+        for (pt=p->next; pt!=NULL; pt=pt->next)
+        {
+            printf("%d %d",pt->xi,pt->eop);
+            if (pt->next==NULL)
+            {
+                printf("\n");
+            }
+            else
+            {
+                printf(" ");
+            }
+        }
+    }
+}
 int main()
 {
-    int i,numA,numB;
+    int i,numA,numB,x,e;
     Node *a=NULL,*b=NULL,*sum=NULL,*mul=NULL;
-    Node *pt=NULL,*pr=NULL;
+    Node *pt=NULL,*pr=NULL,*ps=NULL;
     Node *pa=NULL,*pb=NULL;
     scanf("%d",&numA);
     for (i=0; i<numA; i++)
     {
+        scanf("%d %d",&x,&e);
+        if (x==0)
+        {
+            continue;
+        }
+
         pt = (Node *)malloc(sizeof(Node));
+        pt->xi=x;
+        pt->eop=e;
         pt->next=NULL;
-        scanf("%d %d",&pt->xi,&pt->eop);
         if (a==NULL)
         {
             a=pt;
@@ -33,12 +63,28 @@ int main()
             pr=pt;
         }
     }
+    if (a==NULL)
+    {
+        pt = (Node *)malloc(sizeof(Node));
+        pt->xi=0;
+        pt->eop=0;
+        pt->next=NULL;
+        a=pt;
+    }
     scanf("%d",&numB);
     for (i=0; i<numB; i++)
     {
+
+        scanf("%d %d",&x,&e);
+        if (x==0)
+        {
+            continue;
+        }
+
         pt = (Node *)malloc(sizeof(Node));
+        pt->xi=x;
+        pt->eop=e;
         pt->next=NULL;
-        scanf("%d %d",&pt->xi,&pt->eop);
         if (b==NULL)
         {
             b=pt;
@@ -50,8 +96,80 @@ int main()
             pr=pt;
         }
     }
-    pt=a;
+    if (b==NULL)
+    {
+        pt = (Node *)malloc(sizeof(Node));
+        pt->xi=0;
+        pt->eop=0;
+        pt->next=NULL;
+        b=pt;
+    }
+    ///================
+    mul =(Node *)malloc(sizeof(Node));
+    mul->next=NULL;
+    for (pa=a; pa!=NULL; pa=pa->next)
+    {
+        // printf("11");
+        for (pb=b; pb!=NULL; pb=pb->next)
+        {
+            pt = (Node *)malloc(sizeof(Node));
+            pt->next=NULL;
+            pt->xi=pa->xi*pb->xi;
+            pt->eop=pa->eop+pb->eop;
+            if (mul->next==NULL)
+            {
+                mul->next=pt;
+                pr=mul;
+            }
+            else
+            {
+                for (ps=mul->next,pr=mul; ps!=NULL; ps=ps->next,pr=pr->next)
+                {
+                    if (pt->eop>ps->eop)
+                    {
+                        pt->next=ps;
+                        pr->next=pt;
+                        break;
+                    }
+                    else if (pt->eop==ps->eop)
+                    {
+                        ps->xi+=pt->xi;
+                        if (ps->xi==0)
+                        {
+                            pr->next=ps->next;
+                            free(ps);
+                        }
+                        else
+                        {
+                            free(pt);
+                        }
 
+                        break;
+                    }
+                }
+                if (ps==NULL)
+                {
+                    pr->next=pt;
+                }
+            }
+
+        }
+    }
+     for (pt=mul->next,pr=mul; pt!=NULL; pt=pt->next,pr=pr->next)
+     {
+         if (pt->xi==0)
+         {
+             pr->next=pt->next;
+             ps=pr->next;
+             free(ps);
+         }
+     }
+    display(mul);
+
+    ///=================================================
+    pt=a;
+    sum =(Node *)malloc(sizeof(Node));
+    sum->next=NULL;
     for (pa=a,pb=b; pa!=NULL&&pb!=NULL;)
     {
         pt = (Node *)malloc(sizeof(Node));
@@ -64,7 +182,7 @@ int main()
             pa      =pa->next;
 
         }
-        else if (pa->eop > pb->eop)
+        else if (pa->eop < pb->eop)
         {
             pt->eop =pb->eop;
             pt->xi  =pb->xi;
@@ -74,14 +192,15 @@ int main()
         {
             pt->eop =pa->eop;
             pt->xi  =pa->xi+pb->xi;
+            pb      =pb->next;
+            pa      =pa->next;
         }
-        if (sum==NULL)
+        if (sum->next==NULL)
         {
-            sum=pt;
-            pr=pt;
+            sum->next=pt;
+            pr=sum->next;
         }
         else
-
         {
             pr=pr->next=pt;
         }
@@ -95,21 +214,20 @@ int main()
         pr->next=pb;
     }
 
-for (pt=a;pt!=NULL;pt=pt->next)
-{
-    printf("%d %d",pt->xi,pt->eop);
-    if (pt->next==NULL)
+    for (pt=sum->next,pr=sum; pt!=NULL; pt=pt->next,pr=pr->next)
     {
-        printf("\n");
+        if (pt->xi==0)
+        {
+            pr->next=pt->next;
+            ps=pr->next;
+            free(ps);
+        }
     }
-    else
-    {
-        printf(" ");
-    }
-}
+    display(sum);
 
 
 
-    cout << "Hello world!" << endl;
+
+//   cout << "Hello world!" << endl;
     return 0;
 }
