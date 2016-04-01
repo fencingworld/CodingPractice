@@ -1,0 +1,85 @@
+#include <iostream>
+#include <stdio.h>
+#define     N   100001
+///1310-1436
+using namespace std;
+struct node
+{
+    int id;
+    int  va;
+    int next;
+} NODE[N];
+void display(int start)
+{
+    int pt=start;
+    while(pt!=-1)
+    {
+        printf("%05d %d ",pt,NODE[pt].va);
+        if (NODE[pt].next!=-1)
+        {
+            printf("%05d\n",NODE[pt].next);
+        }
+        else
+        {
+            printf("-1\n");
+        }
+        pt=NODE[pt].next;
+    }
+}
+int main()
+{
+    int start, n,k, i,j,t;
+    int pt,pr,nx,ndnum=0,times=0,rePta,rePtb;
+    cin>>start>>n>>k;
+    for (i=0; i<n; i++)
+    {
+        cin>>t;
+        cin>>NODE[t].va>>NODE[t].next;
+    }
+    pt=start;
+    while(pt!=-1)
+    {
+        ndnum++;
+        pt=NODE[pt].next;
+    }
+    times=ndnum/k;
+    //display(start);
+    if (k!=1)
+    {
+        pr=-1;
+        pt=start;
+
+        for (j=1; j<=times*k; j++)
+        {
+            if (j%k==1)
+            {
+                rePta=rePtb;
+                rePtb=pt;
+
+            }
+            else if (j%k==0)
+            {
+                if (j==k)
+                {
+                    start=pt;
+                }
+                else
+                {
+                    NODE[rePta].next=pt;
+                }
+            }
+            nx=NODE[pt].next;
+            NODE[pt].next=pr;
+            pr=pt;
+            pt=nx;
+        }
+        NODE[rePtb].next=pt;
+    }
+
+
+    display(start);
+
+
+
+    return 0;
+}
