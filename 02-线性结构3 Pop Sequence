@@ -1,0 +1,60 @@
+#include <iostream>
+#define N 1001
+///1440-1526
+using namespace std;
+int s[N]= {0};
+
+int main()
+{
+    int m,n,k,t;
+    int ik,jn,ii;
+    int l,p;
+    int mark;
+    cin>>m>>n>>k;
+    for (ik=0; ik<k; ik++)
+    {
+        p=0;
+        l=1;
+        mark=0;
+        for (jn=0; jn<n; jn++)
+        {
+            cin>>t;
+            if (mark!=0)
+            {
+                continue;
+            }
+            if (p==0||s[p]<t)
+            {
+                for (ii=l; ii<t; ii++)
+                {
+                    p++;
+                    s[p]=ii;
+                    if (p>m-1)
+                    {
+                        mark=1;
+                    }
+                }
+                l=t+1;
+            }
+            else if (s[p]==t)
+            {
+                p--;
+            }
+            else if (s[p]>t)
+            {
+                mark=1;
+
+            }
+        }
+        if (mark==0)
+        {
+            cout<<"YES"<<endl;
+        }
+        else
+        {
+            cout<<"NO"<<endl;
+        }
+
+    }
+    return 0;
+}
