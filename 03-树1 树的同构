@@ -1,0 +1,146 @@
+#include <iostream>
+#include <stack>
+#define N 10
+using namespace std;
+typedef struct node
+{
+    char Ch;
+    int Left;
+    int Right;
+} NODE;
+void readData(NODE Node[],int &head)
+{
+    char ch;
+    int n,i,lf,rt,top;
+    int hS[N]= {0};
+    stack<int> st;
+    cin>>n;
+    for (i=0; i<n; i++)
+    {
+        cin>>Node[i].Ch;
+        cin>>ch;
+        Node[i].Left    = (ch=='-')? -1:(ch-'0');
+        if (Node[i].Left !=-1)
+        {
+            hS[Node[i].Left ]=1;
+        }
+        cin>>ch;
+        Node[i].Right   = (ch=='-')? -1:(ch-'0');
+        if (Node[i].Right !=-1)
+        {
+            hS[Node[i].Right ]=1;
+        }
+    }
+    for (i=0; i<n; i++)
+    {
+        if (hS[i]==0)
+        {
+            head=i;
+            break;
+        }
+    }
+    if (head==-1)
+    {
+        return ;
+    }
+    st.push(head);
+    while(!st.empty())
+    {
+        top = st.top();
+        lf = Node[top].Left;
+        rt = Node[top].Right;
+        if (lf!=-1&&rt!=-1)
+        {
+            if (Node[lf].Ch>Node[rt].Ch)
+            {
+                swap(Node[top].Left,Node[top].Right);
+            }
+        }
+        else if (rt!=-1&&lf==-1)
+        {
+            swap(Node[top].Left,Node[top].Right);
+        }
+        st.pop();
+        if (rt!=-1)
+        {
+            st.push(rt);
+        }
+        if (lf!=-1)
+        {
+            st.push(lf);
+        }
+
+
+    }
+
+}
+bool cmp(NODE NodeA[],NODE NodeB[],int headA,int headB)
+{
+    stack<int >A;
+    stack<int >B;
+    int topA;
+    int topB;
+    if (headA==-1&&headB==-1)
+    {
+        return true;
+    }
+    else if ((headA==-1&&headB!=-1)||(headA!=-1&&headB==-1))
+    {
+        return false;
+    }
+    A.push(headA);
+    B.push(headB);
+    while(!A.empty()&&!B.empty())
+    {
+        topA= A.top();
+        topB= B.top();
+        //cout<<NodeA[topA].Ch<<" "<<NodeB[topB].Ch<<endl;
+        if (NodeA[topA].Ch!=NodeB[topB].Ch)
+        {
+            return false;
+        }
+        A.pop();
+        B.pop();
+        if (NodeA[topA].Right!=-1&&NodeB[topB].Right!=-1)
+        {
+            A.push(NodeA[topA].Right);
+            B.push(NodeB[topB].Right);
+        }
+        else
+        {
+            ;;// return false;
+
+        }
+        if (NodeA[topA].Left!=-1&&NodeB[topB].Left!=-1)
+        {
+            A.push(NodeA[topA].Left);
+            B.push(NodeB[topB].Left);
+        }
+        else
+        {
+            ;// return false;
+
+        }
+
+    }
+    return true;
+
+}
+int main()
+{
+    NODE NodeA[N];
+    NODE NodeB[N];
+    int n,i,headA=-1,headB=-1;
+    readData(NodeA,headA);
+    readData(NodeB,headB);
+
+    if (cmp(NodeA,NodeB,headA,headB)==true)
+    {
+        cout<<"Yes"<<endl;
+    }
+    else
+    {
+        cout<<"No"<<endl;
+    }
+    return 0;
+}
