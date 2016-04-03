@@ -1,0 +1,70 @@
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+#define N 10
+///1400-1437
+using namespace std;
+
+int main()
+{
+    int n,i,t,rt,lf;
+    int tree[N][2];
+    int head=-1,headScore[N]= {0};
+    char cha,chb;
+    queue<int > quTree;
+    cin>>n;
+    for (i=0; i<n; i++)
+    {
+        scanf(" %c %c",&cha,&chb);
+        tree[i][0]= (cha=='-') ? -1 :(cha-'0');
+        tree[i][1]= (chb=='-') ? -1 :(chb-'0');
+
+        t = tree[i][0];
+        if (t!=-1)
+        {
+            headScore[t]=1;
+        }
+        t = tree[i][1];
+        if (t!=-1)
+        {
+            headScore[t]=1;
+        }
+    }
+    for (i=0; i<n; i++)
+    {
+        if (headScore[i]==0)
+        {
+            head=i;
+            break;
+        }
+    }
+    quTree.push(head);
+    while(!quTree.empty())
+    {
+        t=quTree.front();
+
+        lf = tree[t][0];
+        rt = tree[t][1];
+        quTree.pop();
+        if (rt==-1&&lf==-1)
+        {
+            cout<<t;
+            if (quTree.size()==0)
+            {
+                cout<<endl;
+            }
+            else
+                cout<<" ";
+        }
+        if (lf!=-1)
+        {
+            quTree.push(lf);
+        }
+         if (rt!=-1)
+        {
+            quTree.push(rt);
+        }
+    }
+
+    return 0;
+}
