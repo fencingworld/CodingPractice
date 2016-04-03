@@ -1,0 +1,88 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+#define N 10
+///1852-2030
+using namespace std;
+int nodeIst(int  node[N+1][2],int num)
+{
+    int i,t,pt,head=-1;
+    cin>>head;
+   // memset(node,-1,sizeof(node));
+   ///与主函数中的sizeof（node）不等！！！！
+    for (i=1; i<num; i++)
+    {
+        cin>>t;
+        pt=head;
+        while(pt!=-1)
+        {
+            if (t<pt)
+            {
+                if (node[pt][0]==-1)
+                {
+                    node[pt][0]=t;
+                    break;
+                }
+                else
+                {
+                    pt=node[pt][0];
+                }
+            }
+            else
+            {
+                if (node[pt][1]==-1)
+                {
+                    node[pt][1]=t;
+                    break;
+
+                }
+                else
+                {
+                    pt=node[pt][1];
+                }
+
+            }
+        }
+    }
+}
+int nodeCmp(int node[][2],int test[][2],int num)
+{
+    int i=0;
+    for (i=1; i<=num; i++)
+    {
+        if ((node[i][0]!=test[i][0])||(node[i][1]!=test[i][1]))
+        {
+            return -1;
+        }
+    }
+    return 0;
+}
+int main()
+{
+    int node[N+1][2];
+    int test[N+1][2];
+    int n,l,j,y;
+    string outCome;
+
+    while(1)
+    {
+        cin>>n;
+        if (n==0)
+        {
+            break;
+        }
+        cin>>l;
+        memset(node,-1,sizeof(node));
+        nodeIst(node,n);
+        for (j=0; j<l; j++)
+        {
+            memset(test,-1,sizeof(test));
+            nodeIst(test,n);
+            outCome = (nodeCmp(node,test,n)==0)?"Yes":"No";
+            cout<<outCome<<endl;
+
+        }
+
+    }
+    return 0;
+}
