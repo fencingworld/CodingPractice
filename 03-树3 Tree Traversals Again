@@ -1,0 +1,100 @@
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+#include <string>
+#include <string.h>
+#include <stack>
+#define N 30
+///1440-1626
+
+using namespace std;
+
+
+int main()
+{
+    int i,n,t,tree[N+1][2],state=1,prTop=0,head,rt,lf,top;
+    int visit[N+1]= {0};
+
+    string StrIn="Push";
+    string StrOt="Pop";
+    string StrOp;
+    stack<int >stTree;
+    memset(tree,-1,sizeof(tree));
+
+    cin>>n;
+    for (i=1; i<=n*2; i++)
+    {
+        cin>>StrOp;
+        if (StrOp==StrOt)
+        {
+            prTop=stTree.top();
+            stTree.pop();
+            state=0;
+        }
+        else
+        {
+            cin>>t;
+            head= (i==1)?t:head;
+            if (state==1&&(!stTree.empty()))
+            {
+                prTop=stTree.top();
+            }
+            stTree.push(t);
+            if (state==1)
+            {
+
+                tree[prTop][0]=t;
+            }
+            else
+            {
+                tree[prTop][1]=t;
+                state=1;
+            }
+        }
+    }
+
+    while(!stTree.empty())
+    {
+        stTree.pop();
+    }
+    stTree.push(head);
+    visit[head]=1;
+    while(!stTree.empty())
+    {
+        top = stTree.top();
+        visit[top]=1;
+
+        lf = tree[top][0];
+        rt = tree[top][1];
+
+        if ((rt!=-1&&!visit[rt])||(lf!=-1&&!visit[lf]))
+        {
+            if (rt!=-1&&!visit[rt])
+            {
+                stTree.push(rt);
+            }
+            if (lf!=-1&&!visit[lf])
+            {
+                stTree.push(lf);
+            }
+        }
+        else
+        {
+            cout<<top;
+            stTree.pop();
+            if (stTree.empty())
+            {
+                cout<<endl;
+            }
+            else
+            {
+                cout<<" ";
+            }
+
+        }
+
+
+    }
+
+    return 0;
+}
