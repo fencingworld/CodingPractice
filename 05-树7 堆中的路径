@@ -1,0 +1,63 @@
+#include <iostream>
+/// 1445-1532
+#define N 10000
+using namespace std;
+struct heap {
+    int Size;
+    int s[N+1];
+};
+void insHeaP(struct heap &h,int t) {
+    int temp,i,j,k;
+
+    if (h.Size==0) {
+        h.Size++;
+        h.s[0]=-11111;
+        h.s[1]=t;
+        return ;
+    }
+    h.Size++;
+    h.s[h.Size]=t;
+
+
+    swap(h.s[1],h.s[h.Size]);
+    temp = h.s[1];
+    for (i=h.Size/2; i>0; i--) {
+        for(k=i; k*2<=h.Size;) {
+            j=k*2;
+            if (j+1<=h.Size&&h.s[j]>h.s[j+1]) {
+                j++;
+            }
+            if (h.s[k]>h.s[j]) {
+                swap(h.s[k],h.s[j]);
+            }
+            k=j;
+        }
+
+    }
+
+
+}
+int main() {
+    int s[N+1];
+    int m,n,t,i,j;
+    struct heap H;
+    H.Size=0;
+    cin>>n>>m;
+    for (i=0; i<n; i++) {
+        cin>>t;
+        insHeaP(H,t);
+    }
+    for (i=0; i<m; i++) {
+        cin>>t;
+        for (j=t; j>0; j/=2) {
+            if (j!=1) {
+                cout<<H.s[j]<<" ";
+            } else {
+                cout<<H.s[j]<<endl;
+            }
+        }
+    }
+
+
+    return 0;
+}
