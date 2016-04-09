@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+#include <string.h>
+#define N 10001
+using namespace std;
+int s[N];
+int c=0,n=0;
+int sum=0;
+void ins(int a, int b) {
+    int ta,tb,t,i;
+    if (s[a]!=0&&s[b]==0) {
+        t=a;
+        while(s[t]>=0) {
+            t=s[t];
+        }
+        s[b]=t;
+    } else if (s[b]!=0&&s[a]==0) {
+        t=b;
+        while(s[t]>=0) {
+            t=s[t];
+        }
+        s[a]=t;
+    } else if (s[b]!=0&&s[a]!=0) {
+
+        ta=a;
+        while(s[ta]>=0) {
+            ta=s[ta];
+        }
+
+        tb=b;
+        while(s[tb]>=0) {
+            tb=s[tb];
+        }
+        s[tb]=s[ta];
+        sum--;
+    } else {
+
+        s[b]=a;
+        s[a]=-a;
+        sum++;
+    }
+}
+void che(int a,int b) {
+    int ta,tb;
+    tb=s[b];
+    while(tb>0) {
+        tb=s[tb];
+    }
+    ta=s[a];
+    while(ta>0) {
+        ta=s[ta];
+    }
+    if (ta==tb&&tb!=0) {
+        cout<<"yes"<<endl;
+    } else {
+        cout<<"no"<<endl;
+    }
+}
+int main() {
+    int a,b,i;
+    string cmd;
+
+    memset(s,0,sizeof(s));
+
+    cin>>n;
+
+    while(1) {
+        cin>>cmd;
+        if (cmd!="S") {
+            cin>>a>>b;
+            if (cmd=="I") {
+                ins(a,b);
+            } else if (cmd=="C") {
+                che(a,b);
+            }
+        } else {
+            break;
+        }
+    }
+    for (i=1; i<=n; i++) {
+        if (s[i]==0) {
+            sum++;
+        }
+    }
+    if (sum==1) {
+        cout<<"The network is connected."<<endl;
+    } else {
+
+        cout<<"There are "<<sum<<" components."<<endl;
+    }
+    return 0;
+}
