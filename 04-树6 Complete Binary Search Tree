@@ -1,96 +1,54 @@
 #include <iostream>
 #define N 1000
-///1931-
+///1931-2136
 
 using namespace std;
 int sc[N+1];
 int n;
-void getmax(int i) {
-    if (2*i>n) {
-        return;
-    } else if (4*i<=n) {
+int getmax(int i) {
+    if (4*i<=n) {
         getmax(2*i);
         getmax(2*i+1);
-        if (2*i<=n) {
-            if (sc[2*i]>sc[i]) {
-                swap(sc[2*i],sc[i]);
-            }
-        }
-        if (2*i+1<=n) {
-            if (sc[2*i+1]>sc[i]) {
-                swap(sc[2*i+1],sc[i]);
-            }
-        }
-
-    } else {
-        if (2*i<=n) {
-            if (sc[2*i]>sc[i]) {
-                swap(sc[2*i],sc[i]);
-            }
-        }
-        if (2*i+1<=n) {
-            if (sc[2*i+1]>sc[i]) {
-                swap(sc[2*i+1],sc[i]);
-            }
-        }
     }
 
-
+    if (2*i<=n) {
+        if (sc[2*i]>sc[i]) {
+            swap(sc[2*i],sc[i]);
+        }
+    }
+    if (2*i+1<=n) {
+        if (sc[2*i+1]>sc[i]) {
+            swap(sc[2*i+1],sc[i]);
+        }
+    }
+    return sc[i];
 }
-void getmin(int i) {
-    if (2*i>n) {
-        return;
-    } else if (4*i<=n) {
+int getmin(int i) {
+    if (4*i<=n) {
         getmin(2*i);
         getmin(2*i+1);
-        if (2*i<=n) {
-            if (sc[2*i]<sc[i]) {
-                swap(sc[2*i],sc[i]);
-            }
-        }
-        if (2*i+1<=n) {
-            if (sc[2*i+1]<sc[i]) {
-                swap(sc[2*i+1],sc[i]);
-            }
-        }
-
-    } else {
-        if (2*i<=n) {
-            if (sc[2*i]<sc[i]) {
-                swap(sc[2*i],sc[i]);
-            }
-        }
-        if (2*i+1<=n) {
-            if (sc[2*i+1]<sc[i]) {
-                swap(sc[2*i+1],sc[i]);
-            }
-        }
     }
 
+    if (2*i<=n) {
+        if (sc[2*i]<sc[i]) {
+            swap(sc[2*i],sc[i]);
+        }
+    }
+    if (2*i+1<=n) {
+        if (sc[2*i+1]<sc[i]) {
+            swap(sc[2*i+1],sc[i]);
+        }
+    }
+    return sc[i];
 }
-int  maxlf(int t) {
 
-    getmax(t);
-    return sc[t];
-}
-int minrt(int t) {
-
-    getmin(t);
-    return sc[t];
-}
 void dis() {
     int i;
-    for (i=1; i<=n; i++) {
-        cout<<sc[i];
-        if (i==n)
-        {
-            cout<<endl;
-        }
-        else {
-            cout<<" ";
-        }
+    for (i=1; i<n; i++) {
+        cout<<sc[i]<<" ";
     }
-  //  cout<<endl;
+    cout<<sc[i]<<endl;
+    //  cout<<endl;
 }
 int main() {
     int i,mid,rt,lf;
@@ -105,10 +63,10 @@ int main() {
             //  dis();
             mid=sc[i];
             if (2*i<=n) {
-                lf=maxlf(2*i);
+                lf=getmax(2*i);
             }
             if (2*i+1<=n) {
-                rt=minrt(2*i+1);
+                rt=getmin(2*i+1);
             }
             if (2*i+1<=n) {
                 if (lf<=mid&&mid<=rt) {
@@ -136,10 +94,6 @@ int main() {
                 sc[2*i]=lf;
                 sc[i]=mid;
             }
-
-
-
-
 
         }
 
