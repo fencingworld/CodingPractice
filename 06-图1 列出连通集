@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string.h>
+#include <stack>
+#include <queue>
+///2136-2229
+using namespace std;
+#define N 10
+int main() {
+    int v[N];
+    int edge[N][N];
+    int n,e,x,y,i,j,to;
+    stack<int> st;
+    queue<int> qu;
+    // memset(s,0,sizeof(s));
+    memset(v,0,sizeof(v));
+    memset(edge,0,sizeof(edge));
+    cin>>n>>e;
+
+    for (i=0; i<e; i++) {
+        cin>>x>>y;
+        //if (x>y)swap(x,y);
+        edge[x][y]=edge[y][x]=1;
+    }
+    while(!st.empty())st.pop();
+    for (i=0; i<n; i++) {
+        if (st.empty()&&v[i]==0) {
+            cout<<"{ ";
+        }
+        if (v[i]==0) {
+            cout<<i<<" ";
+            st.push(i);
+            v[i]=1;
+            while(!st.empty()) {
+                to = st.top();
+                for (j=0; j<n; j++) {
+                    if (edge[to][j]==1) {
+                        if (v[j]==0) {
+                            cout<<j<<" ";
+                            v[j]=1;
+                            st.push(j);
+                            break;
+                        }
+                    }
+                }
+                if (j==n) {
+                    st.pop();
+                }
+            }
+            cout<<"}"<<endl;
+        }
+    }
+    memset(v,0,sizeof(v));
+    while(!qu.empty())qu.pop();
+    for (i=0; i<n; i++) {
+        if (qu.empty()&&v[i]==0) {
+            cout<<"{ ";
+        }
+        if (v[i]==0) {
+            cout<<i<<" ";
+            qu.push(i);
+            v[i]=1;
+            while(!qu.empty()) {
+                to=qu.front();
+                for (j=0; j<n; j++) {
+                    if (edge[to][j]==1) {
+                        if (v[j]==0) {
+                            qu.push(j);
+                            v[j]=1;
+                            cout<<j<<" ";
+                        }
+                    }
+                }
+                qu.pop();
+            }
+            cout<<"}"<<endl;
+        }
+
+
+    }
+
+    //cout << "Hello world!" << endl;
+    return 0;
+}
