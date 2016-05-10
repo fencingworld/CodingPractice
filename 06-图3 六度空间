@@ -1,38 +1,18 @@
 #include <iostream>
 #include <queue>
-#include <map>
 #include <string.h>
 #include <stdio.h>
-#include <vector>
-#include <algorithm>
 #define N 10001
+//1800
 using namespace std;
-vector < vector<int> > sc;
-
-//bool Score[N][N];
-multimap<int ,int > score;
-map<int ,vector<int> >newsc;
+bool Score[N*N/2];
 int Vst[N];
 int Count;
 int n,m;
-bool edge(int x,int y) {
-
-    if (x>y)
-        swap(x,y);
-    //newsc[x].sort();
-    vector <int >xx(newsc[x]);
-    sort(xx.begin(),xx.end());
-    bool res =binary_search(xx.begin(),xx.end(),y);
-    if (true == res) {
-        return true;
-    }
-    /* for (it=newsc[x].begin(); it!=newsc[x].end(); it++) {
-
-         if (*it==y)
-             return true;
-     }*/
-    return false;
-
+bool edge(int i,int j) {
+    if (i<j)
+        swap(i,j);
+    return Score[i*(i+1)/2+j];
 }
 void sd(int level) {
     //level++;
@@ -42,7 +22,7 @@ void sd(int level) {
     for (int i=1; i<=n; i++) {
         if (Vst[i]==level-1) {
             for (int j=1; j<=n; j++) {
-                if (edge(i,j)==true && !Vst[j]) {
+                if (true==edge(i,j) && !Vst[j]) {
 
                     Vst[j]=level;
                     Count++;
@@ -56,19 +36,16 @@ void sd(int level) {
 int main() {
     int x,y;
     cin>>n>>m;
-    //memset(Score,false,sizeof(Score));
+    memset(Score,false,sizeof(Score));
 
     for (int i=0; i<m; i++) {
         cin>>x>>y;
-        if (x<y) {
-            newsc[x].push_back(y);
-        } else {
-            newsc[y].push_back(x);
-        }
+        if (x<y)
+            swap(x,y);
 
-        //   score.insert(pair<int ,int >(x,y));
-        //     score.insert(pair<int ,int >(y,x));
-        // Score[x][y]=Score[y][x]=true;
+        Score[x*(x+1)/2+y]=true;
+
+        //  Score[x][y]=Score[y][x]=true;
     }
 
     for (int i=1; i<=n; i++) {
