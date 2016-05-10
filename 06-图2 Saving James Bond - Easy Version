@@ -1,0 +1,114 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <stack>
+using namespace std;
+class Spy {
+
+public:
+    Spy() {
+        memset(m_iMap,0,sizeof(m_iMap));
+        memset(m_iVst,0,sizeof(m_iVst));
+    }
+    void setMax(int Max) {
+        m_iMax=Max;
+    }
+    int getMax() {
+        return m_iMax;
+    }
+    void setNum(int Num) {
+        m_iNum=Num;
+    }
+    int getNum() {
+        return m_iNum;
+    }
+    void setMap(int x,int y) {
+        m_iMap[x+50][y+50]=1;
+    }
+    int getMap(int x,int y) {
+        return  m_iMap[x][y];
+    }
+    int canJump(int x,int y) {
+        if ((m_iX.top()-x)*(m_iX.top()-x)+(m_iY.top()-y)*(m_iY.top()-y)<=m_iMax*m_iMax)
+            return 1;
+        else return 0;
+    }
+    int canJump(int x,int y,int n) {
+        if ((m_iX.top()-x)*(m_iX.top()-x)+(m_iY.top()-y)*(m_iY.top()-y)<=(m_iMax+n/2.0)*(m_iMax+n/2.0))
+            return 1;
+        else return 0;
+    }
+    int canEage() {
+        if (m_iX.top()<=m_iMax||m_iX.top()+m_iMax>=100) return 1;
+        if (m_iY.top()<=m_iMax||m_iY.top()+m_iMax>=100) return 1;
+        return 0;
+    }
+    int canEscape() {
+        int i,j;
+        m_iMap[50][50]=1;
+        m_iX.push(50);
+        m_iY.push(50);
+        if (1==canEage()) return 1;
+        for (i=0; i<101; i++) {
+            for (j=0; j<101; j++) {
+                if (1==m_iMap[i][j]) {
+                    if (0==m_iVst[i][j]&&canJump(i,j,15)) {
+                        if (1==dfs(m_iVst,i,j)) {
+                            return 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+    int dfs(int Vst[101][101],int x,int y) {
+
+        int i,j;
+       // cout<<x<<" "<<y<<endl;
+        Vst[x][y]=1;
+        m_iX.push(x);
+        m_iY.push(y);
+
+        if (1==canEage()) return 1;
+        for (i=0; i<101; i++) {
+            for (j=0; j<101; j++) {
+                if (1==m_iMap[i][j]) {
+                    if (0==Vst[i][j]&&canJump(i,j)) {
+                        if (1==dfs(m_iVst,i,j)) {
+                            return 1;
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+
+    }
+private:
+    // int m_iX;
+    //int m_iY;
+    stack<int> m_iX;
+    stack<int> m_iY;
+    int m_iNum;
+    int m_iMax;
+    int m_iMap[101][101];
+    int m_iVst[101][101];
+};
+int main() {
+
+    int x,y,n,m;
+    string Res;
+    Spy spy;
+    cin>>n>>m;
+    spy.setNum(n);
+    spy.setMax(m);
+    for (int i=0; i<n; i++) {
+        cin>>x>>y;
+        spy.setMap(x,y);
+    }
+    Res =1== spy.canEscape() ? "Yes":"No";
+    cout<<Res<<endl;
+    return 0;
+}
