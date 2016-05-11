@@ -25,22 +25,22 @@ void myMerge(vector<int>& tt,int st,int mid,int en) {
     int nmid;
     //printf("%d %d %d %d\n",st,mid ,mid+1,en);
     if (1==mid-st) {
-         printf("%d %d\n",st,mid );
-         out(tt);
-         if (tt[st]>tt[st+1])
-             swap(tt[st],tt[st+1]);
-         out(tt);
-     }
+        printf("%d %d\n",st,mid );
+        out(tt);
+        if (tt[st]>tt[st+1])
+            swap(tt[st],tt[st+1]);
+        out(tt);
+    }
 
-     // else {return ;}
-     ///#################
-     if (1==en-(mid+1)) {
-         printf("%d %d\n",mid+1,en);
-         out(tt);
-         if (tt[en]<tt[en-1])
-             swap(tt[en],tt[en-1]);
-         out(tt);
-     }
+    // else {return ;}
+    ///#################
+    if (1==en-(mid+1)) {
+        printf("%d %d\n",mid+1,en);
+        out(tt);
+        if (tt[en]<tt[en-1])
+            swap(tt[en],tt[en-1]);
+        out(tt);
+    }
 
     //else {return ;}
     /*  if (mid==en)
@@ -126,28 +126,71 @@ void myMerge(vector<int>& tt,int st,int mid,int en) {
 
 
 }
+void mer(vector<int>& tt,int as,int ae,int bs ,int be) {
+
+
+    int c=as;
+    vector<int> co(tt);
+
+
+   // cout<<endl;
+   // printf("%d %d %d %d \n", as, ae, bs , be);
+   // out(co);
+  //  out(tt);
+    while(as<=ae&&bs<=be) {
+        if (co[as]<co[bs]) {
+            tt[c++]=co[as++];
+        } else {
+            tt[c++]=co[bs++];
+        }
+       // printf("%d %d %d %d \n", as, ae, bs , be);
+       // out(co);
+       // out(tt);
+    }
+
+    while(as<=ae) {
+        tt[c++]=co[as++];
+    }
+    //printf("%d %d %d %d \n", as, ae, bs , be);out(co);
+   // out(tt);
+   // cout<<bs<<" "<<be<<endl;
+    while (bs<=be) {
+        tt[c++]=co[bs++];
+    }
+  //  printf("%d %d %d %d \n", as, ae, bs , be);out(co);
+  //  out(tt);
+   // cout<<endl;
+}
 void myMerge1(vector<int>& tt,int step) {
     int en=tt.size()-1;
-    int part=0;
+    // int part=0;
     int part_sA=0;
     int part_eA=part_sA+step-1;
+    if (part_eA>en) {
+        part_eA=en;
+    }
     int part_sB=part_eA+1;
+    if (part_sB>en) {
+        part_sB=en;
+    }
     int part_eB=part_sB+step-1;
+    if (part_eB>en) {
+        part_eB=en;
+    }
     vector<int>co(tt);
-    int c=part_sA;
+    //  int c=part_sA;
     while(part_sB<=en) {
-    while(part_sA<=part_eA&&part_sB<=part_eB) {
-            if (co[part_sA]<co[part_sB]) {
-                tt[c++]=co[part_sA++];
-            } else {
-                tt[c++]=co[part_sB++];
-            }
-        }
-        if (part_sA<=part_eA) {
-            tt[c++]=co[part_sA++];
-        }
-        if (part_sB<=part_eB) {
-            tt[c++]=co[part_sB++];
+
+
+       // printf("%d %d %d %d \n",part_sA,part_eA,part_sB,part_eB);
+        mer(tt,part_sA,part_eA,part_sB,part_eB) ;
+
+        part_sA+=2*step;
+        part_eA+=2*step;
+        part_sB+=2*step;
+        part_eB+=2*step;
+        if (part_eB>en) {
+            part_eB=en;
         }
     }
 
@@ -188,24 +231,40 @@ int main() {
     //int step=1;
     //printf("dddd");
     vector<int>tt1(ss);
-    int step=1;
-    while(step<=tt1.size()) {
-        // myMerge(tt1,step);
+    unsigned int step=1;
+    while(step<tt1.size()) {
+
+
+       // cout<<step<<endl;
+        myMerge1(tt1,step);
+         if (mark==1) {
+              printf("Merge Sort\n");
+              out(tt1);
+              break;
+          }
+          if (mark==0) {
+              if (true==eq_sc(tt1,tar))
+                  mark=1;
+          }
+
+        //   out(tt1);
         step*=2;
+
     }
 
 
+    /*
 
-
-    int st;
-    int md;
-    int en;
-    st=0;
-    en=tt.size()-1;
-    md=(st+en)/2;
-    if (0==(md-st)%2)
-        md--;
-    myMerge(tt1,st,md,en);
+        int st;
+        int md;
+        int en;
+        st=0;
+        en=tt.size()-1;
+        md=(st+en)/2;
+        if (0==(md-st)%2)
+            md--;
+        myMerge(tt1,st,md,en);
+        */
     //int
 
     // out(tt1);
