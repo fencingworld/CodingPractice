@@ -1,0 +1,214 @@
+#include <iostream>
+#include <vector>
+#include <stdio.h>
+using namespace std;
+int mark=0;
+vector<int > ss;
+vector<int > tar;
+bool eq_sc(vector<int >& ss,vector<int >& tt) {
+    int len=ss.size();
+    for(int i=0; i<len; i++) {
+        if (ss[i]!=tt[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+void out(vector<int>& tt) {
+    int i,len=tt.size();
+    for ( i=0; i<len-1; i++) {
+        printf("%d ",tt[i]);
+    }
+    printf("%d\n",tt[i]);
+}
+void myMerge(vector<int>& tt,int st,int mid,int en) {
+    int nmid;
+    //printf("%d %d %d %d\n",st,mid ,mid+1,en);
+    if (1==mid-st) {
+         printf("%d %d\n",st,mid );
+         out(tt);
+         if (tt[st]>tt[st+1])
+             swap(tt[st],tt[st+1]);
+         out(tt);
+     }
+
+     // else {return ;}
+     ///#################
+     if (1==en-(mid+1)) {
+         printf("%d %d\n",mid+1,en);
+         out(tt);
+         if (tt[en]<tt[en-1])
+             swap(tt[en],tt[en-1]);
+         out(tt);
+     }
+
+    //else {return ;}
+    /*  if (mid==en)
+      {
+          return;
+      }*/
+    /*  if (en-st==1) {
+         swap(tt[st],tt[en]);
+         return;
+     }
+     if (st+1==mid&&mid+1==en) {
+         swap(tt[st],tt[mid]);
+         return;
+     }
+     if (st==mid&&mid+1+1==en) {
+
+         swap(tt[en],tt[mid+1]);
+         return;
+     }
+     if (1==mark) {
+          printf("Merge Sort\n");
+          out(tt);
+          mark=0;
+          return ;
+      } else if (true==eq_sc(tt,tar)) {
+          mark=1;
+      }*/
+
+    /* if (mid==st)   {
+           mid=st;
+       } else if (mid-st==1) {
+           swap(tt[mid],tt[st]);
+       } */
+    // if (st+1<mid)
+
+
+    /*  if (mid+1==en) {
+          en=mid+1;
+      } else if (en-(mid+1)==1) {
+          swap(tt[mid+1],tt[en]);
+      } else */
+//   if (mid <en)
+
+
+    if (st<mid&&mid+1<en) {
+        vector<int >co(tt);
+
+        int i=st;
+        int j=mid+1;
+        int c=st;
+        cout<<endl;
+        printf("%d %d %d %d\n",st,mid ,mid+1,en);
+        out(tt);
+        while(i<=mid&&j<=en) {
+            if (co[i]<co[j]) {
+                tt[c++]=co[i++];
+            } else {
+                tt[c++]=co[j++];
+            }
+        }
+        if (i<=mid) {
+            tt[c++]=co[i++];
+        }
+        if (j<=en) {
+            tt[c++]=co[j++];
+        }
+        out(tt);
+        cout<<endl;
+    }
+    if(mid-st>1) {
+        nmid=(mid+st)/2;
+        if (0==(nmid-st)%2)
+            nmid--;
+        myMerge( tt, st,nmid,mid);
+    }
+    if (en-(mid+1)>1) {
+        nmid=(mid+1+en)/2;
+        if (0==(nmid-mid-1)%2)
+            nmid--;
+        myMerge( tt, mid+1,nmid ,en);
+    }
+    //printf("==========\n");
+
+
+}
+void myMerge1(vector<int>& tt,int step) {
+    int en=tt.size()-1;
+    int part=0;
+    int part_sA=0;
+    int part_eA=part_sA+step-1;
+    int part_sB=part_eA+1;
+    int part_eB=part_sB+step-1;
+    vector<int>co(tt);
+    int c=part_sA;
+    while(part_sB<=en) {
+    while(part_sA<=part_eA&&part_sB<=part_eB) {
+            if (co[part_sA]<co[part_sB]) {
+                tt[c++]=co[part_sA++];
+            } else {
+                tt[c++]=co[part_sB++];
+            }
+        }
+        if (part_sA<=part_eA) {
+            tt[c++]=co[part_sA++];
+        }
+        if (part_sB<=part_eB) {
+            tt[c++]=co[part_sB++];
+        }
+    }
+
+}
+int main() {
+    int n,t;
+    cin>>n;
+
+    for (int i=0; i<n; i++) {
+        scanf("%d",&t);
+        ss.push_back(t);
+    }
+    for (int i=0; i<n; i++) {
+        scanf("%d",&t);
+        tar.push_back(t);
+    }
+    vector<int>tt(ss);
+    for (int i=1; i<=n; i++) {
+        int k=i;
+        while(tt[k-1]>tt[k]&&k>0) {
+            swap(tt[k-1],tt[k]);
+            k--;
+        }
+
+        if (mark==1) {
+            printf("Insertion Sort\n");
+            out(tt);
+            break;
+        }
+        if (mark==0) {
+            if (true==eq_sc(tt,tar))
+                mark=1;
+        }
+    }
+    if (1==mark) {
+        return 0;
+    }
+    //int step=1;
+    //printf("dddd");
+    vector<int>tt1(ss);
+    int step=1;
+    while(step<=tt1.size()) {
+        // myMerge(tt1,step);
+        step*=2;
+    }
+
+
+
+
+    int st;
+    int md;
+    int en;
+    st=0;
+    en=tt.size()-1;
+    md=(st+en)/2;
+    if (0==(md-st)%2)
+        md--;
+    myMerge(tt1,st,md,en);
+    //int
+
+    // out(tt1);
+    //cout << "Hello world!" << endl;
+    return 0;
+}
