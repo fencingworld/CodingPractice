@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#define N 101
+#define M 99999
+using namespace std;
+int score[N][N];
+int n,m;
+int main() {
+    int x,y,c;
+
+    cin>>n>>m;
+    // memset(score,M,sizeof(score));
+    vector<vector<int > >score(N,vector<int >(N,M));
+  /*  for (int i=0; i<N; i++) {
+        for (int j=0; j<N; j++) {
+            cout<<score[i][j]<<" ";
+        }
+        cout<<endl;
+    }*/
+    for (int i=0; i<m; i++) {
+        cin>>x>>y>>c;
+        score[x][y]=score[y][x]=c;
+    }
+    int min_V=M;
+    vector<vector<int > >t_score(score);
+ for (int k=1; k<=n; k++) 
+    for (int i=1; i<=n; i++) {
+        for (int j=1; j<=n; j++) {
+            if (i!=j)
+
+               {
+                    if (t_score[i][j]>t_score[i][k]+t_score[k][j]) {
+                        t_score[i][j]=t_score[i][k]+t_score[k][j];
+                    }
+                }
+        }
+
+    }
+    int sum;
+    int k,t;
+    int res[N];
+    for (int i=1; i<=n; i++) {
+
+        t=M;
+        res[i]=0;
+        for (int j=1; j<=n; j++) {
+            if (i!=j) {
+                res[i]=max(t_score[i][j],res[i]);
+            }
+        }
+    }
+    k=1;
+    int v=M;
+    for (int i=1; i<=n; i++) {
+        if (v>res[i]) {
+            v=res[i];
+            k=i;
+        }
+    }
+
+    if (v==M) {
+        cout<<0<<endl;
+    } else {
+        cout << k <<" "<<v<< endl;
+    }
+
+
+
+  /*  for (int i=1; i<=n; i++) {
+        for (int j=1; j<=n; j++) {
+            cout<<t_score[i][j]<<" ";
+        }
+        cout<<endl;
+    }*/
+    return 0;
+}
