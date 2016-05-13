@@ -59,25 +59,18 @@ int main() {
         vst[k]=true;
         for (int i=0; i<n; i++) {
             if (INF!=mp[i][k] && false==vst[i]) {
-                if (dist[i]>dist[k]+mp[k][i]) {
+                if ( (dist[i] > dist[k]+mp[k][i]) ||
+                        (   (dist[i]==dist[k]+mp[k][i])
+                            && (cdist[i]>cdist[k]+cs[k][i]))
+                   ) {
                     dist[i]=dist[k]+mp[k][i];
                     cdist[i]=cdist[k]+cs[k][i];
                     path[i]=k;
-                } else if ((dist[i]==dist[k]+mp[k][i])
-                           && (cdist[i]>cdist[k]+cs[k][i])) {
-                    dist[i]=dist[k]+mp[k][i];
-                    cdist[i]=cdist[k]+cs[k][i];
-                    path[i]=k;
-                }
 
+                }
             }
         }
     }
-    /*
-    for (int i=0;i<n;i++)
-       cout<<path[i]<<" ";
-    cout<<endl;
-    */
     int resLen=0,resCost=0;
     int tmp=d;
     while(tmp!=s) {
@@ -85,7 +78,6 @@ int main() {
         resCost+=cs[tmp][path[tmp]];
         tmp=path[tmp];
     }
-    //makePath(path,s,d,&resLen,&resCost);
     cout <<resLen<<" "<<resCost<< endl;
     return 0;
 }
