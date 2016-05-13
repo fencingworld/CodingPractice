@@ -25,94 +25,6 @@ int findMin(int& n,vector<int>& dist,vector<bool>& vst) {
     return k;
 
 }
-void getRes(vector<vector<int> >mp,vector<vector<int> >cs,
-            vector<bool>vst,vector<int>dist,vector<int>path,
-            int& n,int& m,int& s,int& d,
-            int&resLen,int& resCost ) {
-    int k;
-    while(!isFull(n,vst)) {
-        //k=findMin(n,dist,vst);
-        int v=INF;
-        int vCount=0;
-        for (int i=0; i<n; i++) {
-            if (false==vst[i]) {
-                if (v>dist[i]) {
-                    v=dist[i];
-                    k=i;
-                    vCount=0;
-                } else if (v==dist[i]) {
-                    vCount++;
-                }
-            }
-        }
-
-        if (-1==k) {
-            return;
-        }
-        if (1<vCount) {
-            for (int i=0; i<n; i++) {
-                cout<<".";
-                if (false==vst[i] && v==dist[i]) {
-                    vector<bool >cVst(vst);
-                    vector<vector<int> >cMp(mp);
-                    vector<vector<int> >cCs(cs);
-                    //vector<bool>vst(N,false);
-                    vector<int>cDist(dist);
-                    vector<int>cPath(path);
-
-                    cVst[i]=true;
-                    for (int j=0; j<n; j++) {
-                        if (INF!=cMp[j][i] && false==cVst[j]) {
-                            if (cDist[j]>cDist[i]+cMp[i][j]) {
-                                cDist[j]=cDist[i]+cMp[i][j];
-                                cPath[j]=i;
-                            }
-
-                        }
-                    }
-                    getRes(cMp,cCs,cVst,cDist,cPath,
-                           n, m, s, d,resLen,resCost );
-
-                }
-            }
-            return;
-        } else {
-            vst[k]=true;
-            for (int i=0; i<n; i++) {
-                if (INF!=mp[i][k] && false==vst[i]) {
-                    if (dist[i]>dist[k]+mp[k][i]) {
-                        dist[i]=dist[k]+mp[k][i];
-                        path[i]=k;
-                    }
-
-                }
-            }
-            //makePath(path,s,d,&resLen,&resCost);
-            //cout <<resLen<<" "<<resCost<< endl;
-        }
-
-    }
-    int tResLen=0,tResCost=0;
-    int tmp=d;
-    while(tmp!=s) {
-        tResLen+=mp[tmp][path[tmp]];
-        tResCost+=cs[tmp][path[tmp]];
-        tmp=path[tmp];
-    }
-    if (resLen>tResLen) {
-        resLen=tResLen;
-    } else if (resLen==tResLen) {
-        if (resCost>tResCost) {
-            resCost=tResCost;
-        }
-    }
-    /*
-    for (int i=0;i<n;i++)
-       cout<<path[i]<<" ";
-    cout<<endl;
-    */
-
-}
 int main() {
     int n,m,s,d;
     //cout<<INF;
@@ -121,9 +33,9 @@ int main() {
     vector<vector<int> >cs(N,vector<int> (N,0));
     vector<bool>vst(N,false);
     vector<int>dist(N,INF);
-    int resLen=INF;
-    int resCost=INF;
 
+   // cout<<dist.size();
+   //cout<<mp[1][1];
     cin>>n>>m>>s>>d;
     vector<int>path(N,s);
     for (int i=0; i<m; i++) {
@@ -136,9 +48,35 @@ int main() {
         dist[i]=mp[s][i];
     }
     vst[s]=true;
-    getRes(mp,cs,vst,dist,path,
-           n, m, s, d,resLen,resCost );
+    int k;
+    while(!isFull(n,vst)) {
+        k=findMin(n,dist,vst);
+        if (-1==k) {
+            break;
+        }
+        vst[k]=true;
+        for (int i=0; i<n; i++) {
+            if (INF!=mp[i][k] && false==vst[i]) {
+                if (dist[i]>dist[k]+mp[k][i])
+                    dist[i]=dist[k]+mp[k][i];
+                    path[i]=k;
+            }
+        }
+    }
+ /*
+for (int i=0;i<n;i++)
+    cout<<path[i]<<" ";
+cout<<endl;
+*/
+    int resLen=0,resCost=0;
+    int tmp=d;
+    while(tmp!=s)
+    {
+        resLen+=mp[tmp][path[tmp]];
+        resCost+=cs[tmp][path[tmp]];
+        tmp=path[tmp];
+    }
+    //makePath(path,s,d,&resLen,&resCost);
     cout <<resLen<<" "<<resCost<< endl;
-
     return 0;
 }
