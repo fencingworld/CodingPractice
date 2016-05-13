@@ -33,9 +33,10 @@ int main() {
     vector<vector<int> >cs(N,vector<int> (N,0));
     vector<bool>vst(N,false);
     vector<int>dist(N,INF);
+    vector<int>cdist(N,INF);
 
-   // cout<<dist.size();
-   //cout<<mp[1][1];
+    // cout<<dist.size();
+    //cout<<mp[1][1];
     cin>>n>>m>>s>>d;
     vector<int>path(N,s);
     for (int i=0; i<m; i++) {
@@ -46,6 +47,7 @@ int main() {
     }
     for (int i=0; i<n; i++) {
         dist[i]=mp[s][i];
+        cdist[i]=cs[s][i];
     }
     vst[s]=true;
     int k;
@@ -57,21 +59,28 @@ int main() {
         vst[k]=true;
         for (int i=0; i<n; i++) {
             if (INF!=mp[i][k] && false==vst[i]) {
-                if (dist[i]>dist[k]+mp[k][i])
+                if (dist[i]>dist[k]+mp[k][i]) {
                     dist[i]=dist[k]+mp[k][i];
+                    cdist[i]=cdist[k]+cs[k][i];
                     path[i]=k;
+                } else if ((dist[i]==dist[k]+mp[k][i])
+                           && (cdist[i]>cdist[k]+cs[k][i])) {
+                    dist[i]=dist[k]+mp[k][i];
+                    cdist[i]=cdist[k]+cs[k][i];
+                    path[i]=k;
+                }
+
             }
         }
     }
- /*
-for (int i=0;i<n;i++)
-    cout<<path[i]<<" ";
-cout<<endl;
-*/
+    /*
+    for (int i=0;i<n;i++)
+       cout<<path[i]<<" ";
+    cout<<endl;
+    */
     int resLen=0,resCost=0;
     int tmp=d;
-    while(tmp!=s)
-    {
+    while(tmp!=s) {
         resLen+=mp[tmp][path[tmp]];
         resCost+=cs[tmp][path[tmp]];
         tmp=path[tmp];
