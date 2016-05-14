@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+#define N (1+100)
+using namespace std;
+void outRes(vector<int >& sco) {
+    int i;
+    int n=sco.size();
+    for ( i=0; i<n-1; i++)
+        cout<<sco[i]<<" ";
+    cout<<sco[i]<<endl;
+}
+bool isEqual(vector<int >& sco,vector<int >& tar) {
+    int n=sco.size();
+    for (int i=0; i<n; i++) {
+        if (sco[i]!=tar[i])
+            return false;
+    }
+    return true;
+}
+bool isInsertSort(vector<int > ori,vector<int >& tar) {
+    int mark=0;
+    int n=ori.size();
+    for (int i=1; i<n; i++) {
+        int j=i;
+        while(j>0&&ori[j-1]>ori[j]) {
+            swap(ori[j-1],ori[j]);
+            j--;
+        }
+        // outRes(ori);
+        if (1==mark) {
+            cout<<"Insertion Sort"<<endl;
+            outRes(ori);
+            return true;
+        } else if ( isEqual(ori,tar) ) {
+            mark=1;
+        }
+
+        //cout<<".";
+    }
+    return false;
+}
+void pushDown(vector<int >& ori,int st,int en) {
+//outRes(ori);
+    //cout<<"en "<<en<<endl;
+
+    while(2*st<=en) {
+        if (2*st+1<=en) {
+            //   cout<<endl;
+            //  outRes(ori);
+            if  (ori[2*st+1]>ori[2*st] && ori[2*st+1]>ori[st]) {
+                swap(ori[2*st+1],ori[st]);
+
+                st*=2;
+                st++;
+
+            } else if(ori[2*st]>ori[2*st+1] && ori[2*st]>ori[st]) {
+                swap(ori[2*st],ori[st]);
+                st*=2;
+            } else {
+                break;
+            }
+            //outRes(ori);
+            // cout<<endl;
+            // cout<<st<<" ";
+        } else if (2*st<=en) {
+            if (ori[2*st]>ori[st]) {
+                swap(ori[2*st],ori[st]);
+                st*=2;
+            } else {
+                break;
+            }
+        }
+    }
+    //cout<<endl;
+}
+
+
+
+
+
+void heapSort(vector<int > ori,vector<int >& tar) {
+    int n=ori.size();
+    ori.insert(ori.begin(),0);
+    tar.insert(tar.begin(),0);
+    //outRes(ori);
+    bool mark=false;
+    for (int i=n/2; i>0; i--) {
+        pushDown(ori,i,n);
+        // outRes(ori);
+    }
+   // cout<<"-------------------"<<endl;
+    //outRes(ori);
+    for (int i=n; i>1; i--) {
+       // cout<<endl;
+        //outRes(ori);
+        swap(ori[1],ori[i]);
+        pushDown(ori,1,i-1);
+       // outRes(ori);
+       // cout<<endl;
+        if (mark) {
+            ori.erase(ori.begin());
+            outRes(ori);
+            return ;
+        }
+        if (isEqual(ori,tar)) {
+            mark=true;
+        }
+
+    }
+}
+int main() {
+    int n;
+    cin>>n;
+    vector<int >ori(n);
+    vector<int >tar(n);
+    for (int i=0; i<n; i++) {
+        cin>>ori[i];
+    }
+    for (int i=0; i<n; i++) {
+        cin>>tar[i];
+    }
+    if ( ! isInsertSort(ori,tar)) {
+        cout<<"Heap Sort"<<endl;
+        heapSort(ori,tar);
+    }
+    //vector<>
+    //cout << "Hello world!" << endl;
+    return 0;
+}
