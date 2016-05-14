@@ -1,0 +1,137 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+#define XX (-2)
+using namespace std;
+
+class Stu {
+public:
+    Stu(int n) {
+        sc=vector<int>(n+1,XX);
+        sum=0;
+        id=0;
+        valid=false;
+        rink=0;
+        perfect=0;
+
+    }
+    int rink;
+    int id;
+    int sum;
+    int perfect;
+    bool valid;
+    vector<int>sc;
+};
+
+//bool operator > (Stu a,Stu b)
+bool cmp (Stu a,Stu b) {
+    if (a.sum  >  b.sum) {
+        return true;
+    } else if (a.sum  ==  b.sum) {
+        if (a.perfect>b.perfect) {
+            return true;
+        } else if (a.perfect==b.perfect) {
+            if (a.id<b.id) {
+                return true;
+            }
+        }
+
+    }
+    return false;
+
+}
+int main() {
+    int cPerson,cProblem,cSubmission;
+    cin>>cPerson>>cProblem>>cSubmission;
+    //vector<vector<int> >mp(cPerson+1,vector<int>(cProblem+1,-1));
+    vector<int> score(cProblem,0);
+    vector<Stu>stu(cPerson+1,Stu(cProblem+1));
+    for (int i=1; i<=cProblem; i++) {
+        //cin>>score[i];
+        scanf("%d",&score[i]);
+    }
+    for (int i=1; i<=cSubmission; i++) {
+        int x,y,t;
+        //cin>>x>>y>>t;
+        scanf("%d %d %d",&x,&y,&t);
+        stu[x].id=x;
+        if (stu[x].sc[y] < t ) {
+            stu[x].sc[y]=t;
+        }
+        /*
+        if (stu[x].sc[y] < t ) {
+
+            if (t>0) {
+
+                if (stu[x].sc[y] > 0 ) {
+                    stu[x].sum-=stu[x].sc[y];
+                }
+                stu[x].sum+=t;
+
+            }
+
+            if (stu[x].sc[y]!=score[y] && ( t==score[y] )) {
+                //  cout<<"...";
+                stu[x].perfect++;
+            }
+            stu[x].sc[y]=t;
+        }*/
+        //cin>>mp[x][y];
+
+    }
+  //  cout<<"dddd";
+    for (int x=1; x<=cPerson; x++) {
+        stu[x].sum=0;
+        stu[x].perfect=0;
+        for (int y=1; y<=cProblem; y++) {
+            if (stu[x].sc[y]>=0) {
+                    stu[x].valid=true;
+                stu[x].sum+=stu[x].sc[y];
+                if (stu[x].sc[y]==score[y]) {
+                    stu[x].perfect++;
+                }
+
+            }
+
+        }
+       // cout<<".";
+    }
+   // cout<<"xxxx";
+    sort((stu.begin()+1),stu.end(),cmp);
+  //  cout<<"bbbb";
+    int prevRank=1,prevScore=stu[1].sum;
+    for (int i=1; i<=cPerson; i++) {
+        if (stu[i].sum==prevScore) {
+            stu[i].rink=prevRank;
+
+        } else {
+            stu[i].rink=i;
+        }
+        prevScore=stu[i].sum;
+        prevRank=stu[i].rink;
+        if (true == stu[i].valid) {
+            printf("%d %05d %d",stu[i].rink,stu[i].id,stu[i].sum);
+            //  cout<<" "<<stu[i].perfect<<" ";
+            for (int j=1; j<=cProblem; j++) {
+
+                printf(" ");
+                if (XX==stu[i].sc[j]) {
+                    printf("-");
+                } else if (0>=stu[i].sc[j]) {
+                    printf("0");
+                } else {
+                    printf("%d",stu[i].sc[j]);
+                }
+
+            }
+            cout<<endl;
+
+        }
+
+
+    }
+
+    // cout << "Hello world!" << endl;
+    return 0;
+}
