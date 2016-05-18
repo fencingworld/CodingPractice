@@ -1,0 +1,64 @@
+#include <iostream>
+#include <stdio.h>
+#include <math.h>
+#include <vector>
+using namespace std;
+bool isPrime(int m) {
+    int i;
+    if (m<2)
+        return false;
+        else if (2==m)
+            return true;
+    for (i=2; i<sqrt(m)+1; i++) {
+        if (0==m%i) {
+            return false;
+        }
+    }
+    return true;
+}
+int prime(int m)
+{
+    if (isPrime(m)) return m;
+    for (int i=m+1;;i++)
+    {
+        if (isPrime(i))
+            return i;
+    }
+}
+int main() {
+    int n,m;
+   // cout<<isPrime(2);
+    cin>>m>>n;
+    m=prime(m);
+   // cout<<m;
+    vector<int >sc(m,-1);
+    for (int i=0; i<n; i++) {
+        int t;
+        scanf("%d",&t);
+        int tadd=t%m;
+        int j;
+        for (j=0; j<m/2; j++) {
+
+int add=(tadd+j*j)%m;
+            if (-1==sc[add]) {
+                sc[add]=t;
+                cout<<add;
+                break;
+            }
+        }
+        if (j>=m/2) {
+            cout<<"-";
+        }
+        if (i==n-1) {
+            cout<<endl;
+        } else {
+            cout<<" ";
+        }
+
+
+    }
+
+   // if (Prime)
+     //   cout << "Hello world!" << endl;
+    return 0;
+}
