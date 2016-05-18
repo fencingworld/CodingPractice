@@ -1,0 +1,99 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <map>
+#define N 20001
+using namespace std;
+
+int main() {
+    int n;
+    cin>>n;
+    vector<unsigned int>   cnt(2*N,0);
+    vector<string>   val(2*N);
+    vector<bool >          vst(2*N,false);
+    // str;
+    char strs[20];
+
+    for (int i=0; i<2*n; i++) {
+        //stringstream  ss;
+        int add=0;
+        scanf("%s",strs);
+        for (int j=3,k=1;j<7;j++,k*=10)
+        {
+            add+=k*(strs[j]-'0');
+        }
+        string str(strs);
+        //cin>>str;//cout<<str.substr(3,4);
+
+
+        //cout<<" "<<t<<" ";
+       // string tmpstr=str.substr(3,3);
+       // ss<<tmpstr;
+        // cout<<str;
+        //ss<<"1234";
+       // ss>>add;//cout<<" "<<add;
+       // cout<<"["<<add<<"]";
+        int icnt=0;
+        while(  (vst[add]&&(val[add]!=str))) {
+            icnt++;
+            //add=   ((icnt*icnt+add)>=2*N) ?0:(add+icnt*icnt );
+            add=   (icnt*icnt+add)%(2*N);
+            if (icnt>=2*N) {
+                break;
+            }
+            //cout<<".";
+        }
+        if (icnt>=2*N) {
+            return 0;
+        }
+        vst[add]=true;
+        val[add]=str;
+        cnt[add]++;
+    }
+
+    int kMax=-1;
+    unsigned int vMax=0;
+
+    for (int i=0; i<2*N; i++) {
+        if (vst[i]) {
+             // cout<<i<<" "<<cnt[i]<<" "<<val[i]<<endl;
+            if (-1==kMax||vMax<cnt[i]) {
+                kMax=i;
+                vMax=cnt[kMax];
+                //sCnt=1;
+            }
+        }
+
+    }
+     int sCnt=0;
+    for (int i=0; i<2*N; i++) {
+        if (vst[i]) {
+            //  cout<<i<<" "<<cnt[i]<<" "<<val[i]<<endl;
+            if (vMax==cnt[i]) {
+                if (val[kMax]>val[i]) {
+                    kMax=i;
+                }
+                sCnt++;
+            }
+        }
+
+    }
+
+    //int tmp=(1==sCnt)?vMax:sCnt;
+    if (1==sCnt)
+    {
+        cout<<val[kMax]<<" "<<vMax<<endl;
+    }
+    else
+
+    {
+        cout<<val[kMax]<<" "<<vMax<<" "<<sCnt<<endl;
+    }
+
+
+
+    // cout << "Hello world!" << endl;
+    return 0;
+}
