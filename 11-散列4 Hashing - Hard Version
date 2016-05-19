@@ -1,0 +1,69 @@
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <map>
+#define N 1001
+using namespace std;
+
+int main() {
+    //freopen("read.txt","r",stdin);
+    int n;
+    cin>>n;
+    priority_queue<int,vector<int>,greater<int> >qu;
+    vector<vector< bool> >sc(n,vector<bool>(n,false));
+    vector< int> HashTable(n);
+    vector<bool>vst(N,false);
+    vector<int >inDegree(n,-1);
+    map<int ,int>scmap;
+    for (int i=0; i<n; i++) {
+        scanf("%d",&HashTable[i]);
+        pair<int ,int>p(HashTable[i],i);
+        scmap.insert(p);
+    }
+
+    for (int i=0; i<n; i++) {
+        if (HashTable[i]<0)
+            continue;
+        inDegree[i]=0;
+        int s=HashTable[i]%n;
+        while(HashTable[i]!=HashTable[s]) {
+            sc[s][i]=1;
+            inDegree[i]++;
+            s++;
+            s%=n;
+        }
+        if (0==inDegree[i]) {
+            qu.push(HashTable[i]);
+            vst[i]=true;
+        }
+    }
+
+    while(!qu.empty()) {
+        int top=qu.top();
+        cout<<top;
+        qu.pop();
+
+        for (int i=0; i<n; i++) {
+            if (HashTable[i]<0)
+                continue;
+            int iOftop=scmap[top];
+            // int iOft=scmap[t];
+            if (true==sc[iOftop][i]) {
+                sc[iOftop][i]=false;
+                inDegree[i]--;
+                if (!vst[i]&&0==inDegree[i]) {
+                    qu.push(HashTable[i]);
+                    vst[i]=true;
+                }
+            }
+        }
+        if (qu.empty()) {
+            cout<<endl;
+        } else {
+            cout<<" ";
+        }
+    }
+    return 0;
+}
