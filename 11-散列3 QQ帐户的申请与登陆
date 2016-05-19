@@ -1,0 +1,115 @@
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <vector>
+#define N 10000
+#define LEN 20
+using namespace std;
+struct node {
+    char usr[LEN];
+    char pwd[LEN];
+    struct node *next;
+};
+typedef struct node NODE;
+int newAccount(NODE* HashTable[],char usr[],char pwd[]) {
+    int add=0;
+    int len=strlen(usr);
+    int i,k;
+    for (i=len-5, k=1; i<len; i++,k*=10) {
+        add+=k*(usr[i]-'0');
+    }
+    //cout<<add;
+    int tadd=add%N;
+    int j=0;
+    NODE* head=HashTable[tadd];
+    NODE* pr=head;
+    NODE* pt=head;
+    while(pt!=NULL)
+    {
+        if (0==strcmp(pt->usr,usr))
+        {
+            return 0;
+        }
+        pr=pt;
+        pt=pt->next;
+    }
+    pt=(NODE*)malloc(sizeof(NODE));
+    pt->next=NULL;
+    strcpy(pt->usr,usr);
+    strcpy(pt->pwd,pwd);
+
+    if (NULL==head)
+    {
+        HashTable[tadd]=pt;
+    }
+    else
+    {
+        pr->next=pt;
+    }
+    return 1;
+    //cout<<"d";
+
+    // return -1;
+
+}
+int loginAccount(NODE* HashTable[],char usr[],char pwd[]) {
+    int add=0;
+    int len=strlen(usr);
+    int i,k;
+    for (i=len-5, k=1; i<len; i++,k*=10) {
+        add+=k*(usr[i]-'0');
+    }
+    int tadd=add%N;
+    NODE* head=HashTable[tadd];
+    NODE* pr=head;
+    NODE* pt=head;
+    while(pt!=NULL)
+    {
+        if (0==strcmp(pt->usr,usr))
+        {
+            return 0==strcmp(pt->pwd,pwd)?(1):(2);
+
+        }
+        //pr=pt;
+        pt=pt->next;
+    }
+    return -1;
+}
+int main() {
+     NODE* HashTable[N];
+    //NODE head;
+    //strcpy(head.pwd,"");
+    //strcpy(head.usr,"0");
+    //vector<NODE>HashTable(N,head);
+    memset(HashTable,0,sizeof(HashTable));
+    int n;
+    cin>>n;
+    char cmd[LEN];
+    char usr[LEN];
+    char pwd[LEN];
+    for (int i=0; i<n; i++) {
+        int res=-1;
+        scanf("%s %s %s",cmd,usr,pwd);
+        if (strcmp("N",cmd)==0) {
+            res = newAccount(HashTable,usr,pwd);
+            if (1==res) {
+                printf("New: OK");
+            } else if (0==res) {
+                printf("ERROR: Exist");
+            }
+        } else {
+            res = loginAccount(HashTable,usr,pwd);
+            if (1==res) {
+                printf("Login: OK");
+            } else if (-1==res) {
+                printf("ERROR: Not Exist");
+            } else if (2==res) {
+                printf("ERROR: Wrong PW");
+            }
+        }
+        printf("\n");
+    }
+    //cout << "Hello world!" << endl;
+    return 0;
+}
