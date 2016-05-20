@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int> >mp(n,vector<int>(n,-1));
+    vector<int>inDg(n,0);
+    vector<int>eTime(n,0);
+    vector<vector<int> >preNode(n);
+    vector<vector<int> >nxtNode(n);
+    for (int i=0; i<m; i++) {
+        int s,e;
+        cin>>s>>e;
+        cin>>mp[s][e];
+        preNode[e].push_back(s);
+        nxtNode[s].push_back(e);
+        inDg[e]++;
+    }
+
+
+    queue<int>qu;
+    int cnt=0;
+    for (int i=0; i<n; i++) {
+        if (0==inDg[i]) {
+            qu.push(i);
+            cnt++;
+        }
+    }
+    while(!qu.empty()) {
+        int top=qu.front();
+        qu.pop();
+
+        int s_n=preNode[top].size();
+        for (int j=0; j<s_n; j++) {
+            int topj=preNode[top][j];
+            eTime[top]=max(eTime[top],eTime[topj]+mp[topj][top]);
+        }
+        //  cout<<top<<" "<<eTime[top]<<endl;
+        s_n=nxtNode[top].size();
+        for (int j=0; j<s_n; j++) {
+            int topj=nxtNode[top][j];
+            inDg[ topj ]--;
+            if (0==inDg[ topj ]) {
+                qu.push(topj);
+                cnt++;
+            }
+        }
+    }
+    if ( n==cnt) {
+        cout<<*max_element(eTime.begin(),eTime.end())<<endl;
+        //break;
+    }
+
+    else  {
+        cout<<"Impossible"<<endl;
+        // break;
+    }
+
+
+
+    // cout << "Hello world!" << endl;
+    return 0;
+}
