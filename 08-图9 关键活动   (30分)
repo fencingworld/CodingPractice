@@ -1,0 +1,166 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+///1348
+using namespace std;
+class Act {
+public:
+    int i;
+    int s;
+    int e;
+    int c;
+    bool isAct;
+    Act(int i,int s,int e,int c):i(i),s(s),e(e),c(c),isAct(false) {}
+};
+bool cmp(Act a,Act b) {
+    if (a.isAct>b.isAct) {
+        return true;
+    } else if (a.isAct==b.isAct) {
+        if (a.s<b.s) {
+            return true;
+        } else if (a.s==b.s) {
+            if (a.i>b.i) {
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+int main() {
+    int n,m;
+    bool flag=false;
+    cin>>n>>m;
+    vector< Act > mp;
+
+    vector<vector<int> >mpScore(n+1,vector<int>(n+1,0));
+    vector<vector<int> >preNode(n+1);
+    vector<vector<int> >nxtNode(n+1);
+    vector<int> preDg(n+1,0);
+    vector<int> nxtDg(n+1,0);
+    vector<int> sTime(n+1,0);
+    vector <bool> nodeAct(n+1,false);
+
+    //cin>>n>>m;
+
+
+
+    for (int i=0; i<m; i++) {
+        int s,e,c;
+        cin>>s>>e>>c;
+        mpScore[s][e]=c;
+        mp.push_back( Act(i,s,e,c));
+        preNode[e].push_back(s);
+        preDg[e]++;
+        nxtNode[s].push_back(e);
+        nxtDg[s]++;
+    }
+
+
+    queue<int>qu;
+    int cnt=0;
+    for (int i=1; i<=n; i++) {
+        if (0==preDg[i]) {
+            qu.push(i);
+            cnt++;
+        }
+    }
+
+
+    while(!qu.empty()) {
+        int e=qu.front();
+        //cout<<e<<" ";
+        qu.pop();
+        //for ()
+        int s_n=preNode[e].size();
+        for (int i=0; i<s_n; i++) {
+            int s=preNode[e][i];
+            sTime[e]=max(sTime[e],sTime[s]+mpScore[s][e]);
+        }
+
+        int s=e;
+        s_n=nxtNode[s].size();
+        for (int i=0; i<s_n; i++) {
+            // cout<<".";
+            e=nxtNode[s][i];
+            preDg[e]--;
+            if (0== preDg[e] ) {
+                qu.push(e);
+                cnt++;
+            }
+        }
+    }
+    int res;
+    if (n==cnt) {
+            res=*max_element(sTime.begin()+1,sTime.end());
+        cout<<res<<endl;
+        flag=true;
+    } else {
+        //cout<<cnt;
+        cout<<0<<endl;
+    }
+    if (!flag)
+        return 0;
+    cnt=0;
+    vector<int> eTime(n+1,(res));
+    for (int i=1; i<=n; i++) {
+        if (0==nxtDg[i]) {
+            eTime[i]=res;
+            qu.push(i);
+            cnt++;
+        }
+    }
+
+
+    while(!qu.empty()) {
+        int s=qu.front();
+        //cout<<e<<" ";
+        qu.pop();
+        int s_n=nxtNode[s].size();
+        for (int i=0; i<s_n; i++) {
+            int e=nxtNode[s][i];
+            eTime[s]=min(eTime[s],eTime[e]-mpScore[s][e]);
+        }
+        //cout<<"---"<<s<<" "<<sTime[s]<<" " <<eTime[s]<<endl;
+
+        int e=s;
+        s_n=preNode[e].size();
+        for (int i=0; i<s_n; i++) {
+            // cout<<".";
+            s=preNode[e][i];
+            nxtDg[s]--;
+            if (0== nxtDg[s] ) {
+                qu.push(s);
+                cnt++;
+            }
+        }
+    }
+    for (int i=1;i<=n;i++)
+    {
+       // cout<<i<<" "<<sTime[i]<<" " <<eTime[i]<<endl;
+        if (eTime[i]==sTime[i])
+        nodeAct[i]=true;
+    }
+    for (int i=0; i<m; i++) {
+        int s=mp[i].s;
+        int e=mp[i].e;
+        if (mpScore[s][e]== eTime[e]-sTime[s]) {
+            mp[i].isAct=true;
+            //cout<<"d:"<<i<<endl;
+        }
+        //cout<<sTime[i]<<" "<<eTime[i]<<endl;
+        //if (sTime[i]==eTime[i])
+
+        //mp[i]
+    }
+    sort(mp.begin(),mp.end(),cmp);
+    for (int i=0; i<m; i++) {
+        if (mp[i].isAct) {
+            cout<<mp[i].s<<"->"<<mp[i].e<<endl;
+        }
+    }
+
+    //cout << "Hello world!" << endl;
+    return 0;
+}
