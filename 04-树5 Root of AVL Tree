@@ -1,0 +1,63 @@
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+using namespace std;
+///0914
+typedef struct bintree {
+    struct bintree *rt;
+    struct bintree *lf;
+    int value;
+    int hight;
+    int banlance;
+} AVLTree;
+void InTravel(AVLTree *pt) {
+    if (pt) {
+        InTravel(pt->lf);
+        cout<<pt->value<<" ";
+        InTravel(pt->rt);
+    }
+
+}
+int getHeight(AVLTree *pt)
+{
+    if (pt)
+    {
+        return max(getHeight(pt->lf),getHeight(pt->rt))+1;
+    }
+    return 0;
+}
+AVLTree * AVLInsert(AVLTree *pt,int t) {
+    if (pt==NULL) {
+        pt   =(AVLTree *)malloc(sizeof(AVLTree));
+        pt->banlance=0;
+        pt->hight=1;
+        pt->lf=NULL;
+        pt->rt=NULL;
+        pt->value=t;
+        return pt;
+    } else  if (t<pt->value) {
+        pt->lf =   AVLInsert(pt->lf, t);
+    } else if (t>pt->value) {
+        pt->rt =   AVLInsert(pt->rt, t);
+    }
+}
+int main() {
+
+    int num,i,t;
+    AVLTree *head=NULL;
+    AVLTree *pr=NULL,*ps=NULL;
+
+    cin>>num;
+    for (i=0; i<num; i++) {
+        cin>>t;
+        head = AVLInsert(head,t);
+
+    }
+    if (head==NULL) {
+        cout<<"nia";
+    } else
+        cout<<head->value<<endl;
+        cout<<getHeight(head);
+    //InTravel(head);
+    return 0;
+}
