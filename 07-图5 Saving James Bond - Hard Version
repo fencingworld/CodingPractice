@@ -3,72 +3,45 @@
 #include <string.h>
 #include <vector>
 #include <math.h>
+#include <queue>
 #include <stack>
 #define N 105
 #define INF 999999
-///13:20
+///13:20-18:20
+///15:30-
 using namespace std;
 class node {
 public:
     node() {}
-    node(int x,int y ):m_x(x),m_y(y) {}
+    node(int x,int y ,bool save):m_x(x),m_y(y),minDist(INF) ,isSave(save),step(0) {}
+    node(int x,int y ):m_x(x),m_y(y) ,minDist(INF),isSave(false),step(0) {}
     int m_x;
     int m_y;
+    int minDist;
+    bool isSave;
+    int step;
+    int preNode;
 };
 int n;
-int dist[N];
-//vector<int >dist(N,INF);
-bool coll[N];
-int path[N];
+
+vector<bool> vst(N,false);
+vector<int > path(N,-1);
 vector<node>vNode;
 int mp[N][N];
 //vector< vector < int >(N,INF) > mp( N);
 //int INF = 1<<8;
-bool isFull() {
 
-    int fi;
-    for ( fi=1; fi<=n+1; fi++) {
-        if (coll[fi]==false) {
-            return false;
-        }
-    }
-    return true;
-}
-int minDistK() {
-    int k=-1;
-    int v=INF;
-    for (int i=1; i<=n+1; i++) {
-        if (coll[i]==false) {
-           // cout<<i<<" "<<dist[i]<<"  ";
-            if (v>dist[i]) {
-
-                v=dist[i];
-                k=i;
-            }
-        }
-    }
-   // cout<<k<<endl;
-    return k;
-}
 int deep;
 stack<int> pStack;
 void makePath(int tar) {
-    int i=path[tar];
-    if (-1!=i) {
-        pStack.push(i);
-        deep++;
-        makePath(i);
-
-        //cout<<i<<" "<<vNode[i].m_x<<" "<<vNode[i].m_y<<endl;
+    if (-1!=tar)
+    {
+        pStack.push(tar);
+        makePath(path[tar]);
     }
-    //cout<<"=============="<<endl;
 
 
-    //break;
 
-    // cout<<"------------------"<<endl;
-    // if (i<=n+1)
-    //  cout<<vNode[i].m_x<<" "<<vNode[i].m_y<<endl;
 }
 int myMin(int x,int y) {
     int sc[4];
@@ -86,40 +59,46 @@ int myMin(int x,int y) {
 
 }
 int main() {
+    freopen("read3.txt","r",stdin);
     int imax,a,b;
     for (int i=0; i<N; i++) {
         for (int j=0; j<N; j++) {
             mp[i][j]=INF;
         }
+    }
 
-    }
-    // memset(mp,INF,sizeof(mp));
-    for (int i=0; i<N; i++) {
-        dist[i]=INF;
-    }
-    // memset(dist,INF,sizeof(dist));
-    memset(path,-1,sizeof(path));
-    memset(coll,false,sizeof(coll));
-    /*    for (int i=0; i<=n+1; i++)
-        cout<<coll[i]<<" ";*/
-    //cout<<endl;
+
+
     vNode.push_back(node(0,0));
     cin>>n>>imax;
+
     for (int i=0; i<n; i++) {
         cin>>a>>b;
-        vNode.push_back(node(a,b));
+        if (4*(a*a+b*b)<=15*15)
+            continue;
+        if (a<-50||a>50||b<-50||b>50)
+            continue;
+        bool save=myMin(a,b)<=imax;
+        vNode.push_back(node(a,b,save));
     }
+    if (imax>=42) {
+        cout<<1;
+        return 0;
+    }
+
+
     node tnode;
     //mp[0][0]=0;
     int ilen;
+    n=vNode.size()-1;
     for (int i=1; i<=n; i++) {
         tnode=vNode[i];
         ilen=tnode.m_x*tnode.m_x+tnode.m_y*tnode.m_y;
         if ((4*ilen)<=(15+2*imax)*(15+2*imax)) {
-            dist[i]=mp[0][i]=mp[i][0]=4*ilen-15*15;
+            vNode[i].minDist=mp[0][i]=mp[i][0]=4*ilen-15*15;
         }
     }
-    //dist[n+1]=INF;
+
 
     node snode;
     for (int i=1; i<=n; i++) {
@@ -140,59 +119,70 @@ int main() {
         }
 
     }
-    int k;
 
-    while(!isFull()) {
-        //  cout<<".";
-        k=minDistK();
+    queue<int>qu;
+    for (int i=1;i<=n;i++)
+    {
+        if (vNode[i].minDist!=INF)
+        {
+            qu.push(i);
+            vst[i]=true;
+        }
+    }
 
-        //  cout<<k<<" ";
-        if (-1==k)
-            break;
-        coll[k]=true;
-        for (int i=1; i<=n+1; i++) {
-            if (i!=k&&mp[k][i]<=INF&&coll[i]==false) {
-                if (dist[i]>dist[k]+mp[k][i]) {
-                    dist[i]=dist[k]+mp[k][i];
-                    //cout<<k<<"->"<<i<<endl;
-                    path[i]=k;
+    int resK=-1,resM=INF;
+    while(!qu.empty()) {
+
+        int top=qu.front();
+
+        qu.pop();
+        for (int i=1; i<=n; i++) {
+
+            if (!vst[i] && mp[top][i]!=INF ) {
+                //   cout<<"-----------";
+                vst[i]=true;
+                vNode[i].step=vNode[top].step+1;
+                vNode[i].minDist=vNode[top].minDist;
+                path[i]=top;
+
+                if (vNode[i].isSave) {
+
+                    if (vNode[i].step<resM   ) {
+                        resK=i;
+                        resM=vNode[i].step;
+
+                    }
+
+                    else if (vNode[i].step==resM) {
+                        if (vNode[i].minDist<vNode[resK].minDist) {
+                            resK=i;
+                        }
+                    }
+
+
+
+                } else {
+                    qu.push(i);
+
+
                 }
             }
         }
-
     }
 
 
-    // cout<<dist[n+1]<<endl;
-    if (-1==path[n+1]) {
+    if (-1==resK) {
         cout<<0<<endl;
     } else {
-        makePath(n+1);
-        cout<<pStack.size()<<endl;
+        makePath(resK);
+        cout<<pStack.size()+1<<endl;
         while(!pStack.empty()) {
             int i=pStack.top();
             pStack.pop();
             cout<<vNode[i].m_x<<" "<<vNode[i].m_y<<endl;
-
         }
 
     }
 
-    /*  for (int i=0; i<=n+1; i++)
-          cout<<i<<" "<<path[i]<<endl;
-      cout<<endl;
-
-      cout<<endl;
-      for (int i=0; i<=n+1; i++)
-          cout<<dist[i]<<" ";
-      cout<<endl<<endl;
-      for (int i=0; i<=n+1; i++) {
-          for (int j=0; j<=n+1; j++)
-              cout<<mp[i][j]<<" ";
-          cout<<endl;
-      }
-    */
-
-  //  cout << "Hello world!" << endl;
     return 0;
 }
