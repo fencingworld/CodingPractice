@@ -1,0 +1,46 @@
+class Solution {
+public:
+
+    string s_;
+    vector<string>  res_;
+    bool validstr(int i,int j) {
+        string numstr(s_,i,j);
+        if (j>1) {
+            if (s_[i]=='0') {
+                return false;
+            }
+        }
+        if (j>2) {
+            if (s_[i]=='0'&&s_[i+1]=='0') {
+                return false;
+            }
+
+        }
+        int num = atoi(numstr.c_str());
+        return 0<=num&&num<256;
+    }
+    void ip(string &part_ip,int kth,int idx) {
+        if (kth==4&&idx==s_.size()) {
+            res_.push_back(string(part_ip.begin(),part_ip.end()-1));
+            return ;
+        }
+        for (int i=0; i<3&&idx+i+1<=s_.size(); ++i) {
+            if(validstr(idx,i+1)) {
+                string ipdot = part_ip+string(s_,idx,i+1)+string(".");
+                ip( ipdot,kth+1,idx+i+1);
+            } else {
+                break;
+            }
+        }
+    }
+    vector<string> restoreIpAddresses(string s) {
+
+        if (s.size()<1) {
+            return vector<string>();
+        }
+        s_=s;
+        string tmp;
+        ip(tmp,0,0);
+        return res_;
+    }
+};
