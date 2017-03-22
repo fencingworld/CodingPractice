@@ -1,0 +1,23 @@
+class Solution {
+public:
+    double power(double x, int n) {
+        if (x==0) {
+            return 0;
+        }
+        else if (n==0) {
+            return 1.0;
+        } else if (n==1) {
+            return x;
+        } else {
+            double y = pow(x,n/2);
+            y*=y;
+            return n&0x1?y*x:y;
+        }
+    }
+
+    double pow(double x, int n) {
+
+        return n>=0?power(x,n):(1.0/power(x,-n));
+
+    }
+};
