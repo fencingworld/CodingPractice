@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int size_;
+    vector<int> num_;
+    set<vector<int> >res;
+    void permute (int n){
+        if (n==size_-1){
+            res.insert(num_);
+            return ;
+        }
+        permute ( n+1);
+        for (int i=n+1;i<size_;++i){
+            if (num_[i]!=num_[n]){
+            swap(num_[i],num_[n]);
+            permute(n+1);
+            swap(num_[i],num_[n]);
+            }
+
+        }
+    }
+    vector<vector<int> > permuteUnique(vector<int> &num) {
+        size_ 	= 	num.size();
+        if (size_<=0){
+            return  vector<vector<int> > (res.begin(),res.end());
+        }
+        num_	=	num;
+        permute (0);
+        return vector<vector<int> > (res.begin(),res.end());
+        
+    }
+};
